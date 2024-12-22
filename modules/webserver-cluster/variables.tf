@@ -10,3 +10,9 @@ variable "image_id" {
   type = string
   sensitive = false
 }
+
+variable "server_text" {
+  description = "the text the web server returns"
+  type = string
+  default = "Hello World"
+}
