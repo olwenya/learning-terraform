@@ -1,7 +1,3 @@
-locals {
-  all_ips = "0.0.0.0/0"
-}
-
 data "aws_vpc" "default" {
   default = true
 }
@@ -13,16 +9,24 @@ data "aws_subnets" "default" {
   }
 }
 
+data "aws_ec2_instance_type" "instance" {
+  instance_type = var.instance_type
+}
+
 resource "aws_launch_template" "example" {
   image_id        = "ami-${var.image_id}"
   vpc_security_group_ids =[aws_security_group.instance.id]
-  instance_type   = "t2.micro"
+  instance_type   = var.instance_type
   user_data       = base64encode(templatefile("${path.module}/script.sh",{
     server_port = var.server_port
     server_text = var.server_text
   }))
   lifecycle {
     create_before_destroy = true
+    precondition {
+      condition = data.aws_ec2_instance_type.instance.free_tier_eligible
+      error_message = "${var.instance_type} is not part of the free tier"
+    }
   }
 }
 
