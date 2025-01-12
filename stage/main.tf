@@ -1,6 +1,6 @@
 module "webserver-cluster" {
   source = "../modules/webserver-cluster"
-  image_id = "0fb653ca2d3203ac1"
+  image_id = "0aa8fc2422063977a"
 }
 
 provider "aws" {

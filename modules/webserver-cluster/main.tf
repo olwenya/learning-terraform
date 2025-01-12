@@ -19,6 +19,7 @@ resource "aws_launch_template" "example" {
   instance_type   = "t2.micro"
   user_data       = base64encode(templatefile("${path.module}/script.sh",{
     server_port = var.server_port
+    server_text = var.server_text
   }))
   lifecycle {
     create_before_destroy = true
@@ -30,6 +31,7 @@ resource "aws_autoscaling_group" "example" {
     id = aws_launch_template.example.id    
     version = aws_launch_template.example.latest_version
   }
+  name_prefix = var.image_id
   vpc_zone_identifier  = data.aws_subnets.default.ids
 
   target_group_arns = [aws_lb_target_group.asg.arn]
@@ -77,7 +79,7 @@ resource "aws_lb_target_group" "asg" {
     interval            = 15
     timeout             = 3
     healthy_threshold   = 2
-    unhealthy_threshold = 2
+    unhealthy_threshold = 5
   }
 }
 
