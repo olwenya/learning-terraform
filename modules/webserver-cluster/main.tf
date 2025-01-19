@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
 data "aws_vpc" "default" {
   default = true
 }
@@ -48,6 +57,13 @@ resource "aws_autoscaling_group" "example" {
     key                 = "Name"
     value               = "terraform-asg-example"
     propagate_at_launch = true
+  }
+
+  lifecycle {
+    postcondition {
+      condition = length(self.availability_zones) > 1
+      error_message = "You must use more than one AZ for high availability"
+    }
   }
 
 }

@@ -10,6 +10,6 @@ provider "aws" {
 }
 
 output "cluster_alb_dns_name" {
-  value = module.webserver-cluster.alb_dns_name
+  value = "https://${module.webserver-cluster.alb_dns_name}"
 }
 
