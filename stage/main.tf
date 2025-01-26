@@ -7,6 +7,14 @@ module "webserver-cluster" {
 
 provider "aws" {
  region = "us-east-2" 
+
+ default_tags {
+   tags = {
+     "Owner" = "Allan Olweny"
+     "ManagedBy" = "Terraform"
+     "Environment" = "stage"
+   }
+ }
 }
 
 output "cluster_alb_dns_name" {
